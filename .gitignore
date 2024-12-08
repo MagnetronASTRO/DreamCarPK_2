@@ -1,0 +1,44 @@
+# Build
+web/dist
+web/lib
+web/lib-types
+web/server
+
+# Development
+web/node_modules
+web/.env
+web/*.local
+
+# Cache
+web/.cache
+web/.mf
+web/.rollup.cache
+web/tsconfig.tsbuildinfo
+
+# Logs
+web/logs
+web/*.log
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/pnpm-debug.log*
+web/lerna-debug.log*
+
+# Editor
+web/.vscode/*
+web/!.vscode/launch.json
+web/!.vscode/*.code-snippets
+
+.idea
+.DS_Store
+web/.idea
+web/.DS_Store
+web/*.suo
+web/*.ntvs*
+web/*.njsproj
+web/*.sln
+web/*.sw?
+
+# Yarn
+web/.yarn/*
+web/!.yarn/releases
