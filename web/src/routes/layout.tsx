@@ -25,6 +25,7 @@ export default component$(() => {
   return <Slot />;
 });
 
+// TODO
 //useVisibleTask$(() => {
 //  window.HSStaticMethods.autoInit();
 //});
