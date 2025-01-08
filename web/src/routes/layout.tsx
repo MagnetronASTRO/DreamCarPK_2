@@ -1,7 +1,9 @@
 import { component$, Slot } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import type { IStaticMethods } from "preline/preline";
-
+import { Header } from "~/components/header";
+import { Main } from "~/components/main";
+import { Footer } from "~/components/footer";
 
 // TODO: move to routes that will use preline components
 declare global {
@@ -22,7 +24,15 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  return <Slot />;
+  return (
+    <>
+      <Header />
+      <Main>
+        <Slot />
+      </Main>
+      <Footer />
+    </>
+  );
 });
 
 // TODO
