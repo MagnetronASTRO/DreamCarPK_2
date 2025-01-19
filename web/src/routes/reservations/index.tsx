@@ -12,7 +12,7 @@ import { component$, useResource$, Resource } from "@builder.io/qwik";
 const fetchUserReservations = (userId: string) => {
   return [
     {
-      id: 1,
+      id: userId,
       carMaker: "Honda",
       carModel: "Civic",
       pickupDate: "2025-01-20",
