@@ -12,6 +12,7 @@ class CarPricing extends Model
     use HasFactory;
 
     protected $fillable = [
+        'car_id',
         'hour_price',
     ];
 

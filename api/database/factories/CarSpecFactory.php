@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Car;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,10 +15,13 @@ class CarSpecFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
         return [
-            //
+            'car_id' => Car::factory(),
+            'power' => fake()->numberBetween(50, 500), // Power between 50 to 500 HP
+            'color' => fake()->safeColorName(),
         ];
     }
 }

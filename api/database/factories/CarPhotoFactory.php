@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Car;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class CarPhotoFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'car_id' => Car::factory(),
+            'photo_name' => fake()->imageUrl(800, 600, 'cars'), // Generates a random image URL
         ];
     }
 }

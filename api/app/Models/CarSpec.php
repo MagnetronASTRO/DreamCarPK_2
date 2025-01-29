@@ -12,6 +12,7 @@ class CarSpec extends Model
     use HasFactory;
 
     protected $fillable = [
+        'car_id',
         'power',
         'color',
     ];

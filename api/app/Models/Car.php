@@ -33,9 +33,4 @@ class Car extends Model
     {
         return $this->hasMany(CarPhoto::class);
     }
-
-    public function reservations(): HasMany
-    {
-        return $this->hasMany(Reservation::class);
-    }
 }

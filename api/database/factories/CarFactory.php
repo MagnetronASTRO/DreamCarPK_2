@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Car;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class CarFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'make' => fake()->company(),
+            'model' => fake()->word(),
+            'year' => fake()->numberBetween(2000, 2024),
+            'is_available' => fake()->boolean(80), // 80% chance it's available
         ];
     }
 }
