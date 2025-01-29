@@ -1,20 +1,19 @@
 services:
-  web:
-    build:
-      context: ./web
-      dockerfile: ./Dockerfile
-    container_name: qwik-webapp
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - ORIGIN=http://localhost
-    volumes:
-      - ./web:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - api
-    command: ["npm", "run", "start"]
+  # web:
+  #   build:
+  #     context: ./web
+  #     dockerfile: ./Dockerfile
+  #   container_name: qwik-webapp
+  #   ports:
+  #     - "3000:3000"
+  #   # environment:
+  #   #   - NODE_ENV=development
+  #   #   - ORIGIN=http://localhost
+  #   volumes:
+  #     - ./web:/usr/src/app
+  #   depends_on:
+  #     - api
+  #   # command: ["npm", "run", "start"]
 
   api:
     build:

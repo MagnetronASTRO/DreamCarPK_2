@@ -1,5 +1,9 @@
 .PHONY: up down restart logs web-api redis
 
+# build and start production
+prod-build:
+	docker compose up -d --build && docker compose run --rm web npm run build && docker compose run --rm web npm run serve
+
 # Start all services
 up:
 	docker compose up -d --build
@@ -23,10 +27,6 @@ web-dev:
 # Run API migrations and setup
 api-setup:
 	docker compose exec api php artisan migrate --seed
-
-# View Swagger UI
-swagger:
-	echo "Swagger UI available at: http://localhost:8888"
 
 # Run Redis CLI
 redis:

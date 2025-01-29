@@ -3,8 +3,10 @@
 import { $, component$, type QRL } from "@builder.io/qwik";
 import { Link, routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler } from "@modular-forms/qwik";
-import { formAction$, useForm, valiForm$ } from "@modular-forms/qwik";
+import { formAction$, useForm, valiForm$, setError } from "@modular-forms/qwik";
 import * as v from "valibot";
+
+const endpoint = import.meta.env.PUBLIC_API_ENDPOINT;
 
 const LoginSchema = v.object({
   email: v.pipe(
@@ -26,10 +28,6 @@ export const useFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
   password: "",
 }));
 
-// export const useFormAction = formAction$<LoginForm>((values) => {
-//   // Runs on server
-// }, valiForm$(LoginSchema));
-
 export default component$(() => {
   const [loginForm, { Form, Field }] = useForm<LoginForm>({
     loader: useFormLoader(),
@@ -39,47 +37,63 @@ export default component$(() => {
 
   const nav = useNavigate();
 
+  const getBrowserCookieValue = $(function getBrowserCookieValue(
+    cname: string,
+  ) {
+    const name = cname + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+
+    return "";
+  });
+
   const handleSubmit: QRL<SubmitHandler<LoginForm>> = $(async (values) => {
     // await fetch(`${endpoint}/sanctum/csrf-cookie`, { credentials: "include" });
     //
     // const token = await getBrowserCookieValue("XSRF-TOKEN");
 
-    const response = await fetch(`http://localhost:8000/api/login`, {
+    const response = await fetch(`${endpoint}/login`, {
       method: "POST",
-      // credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        // "X-XSRF-TOKEN": token,
       },
       body: JSON.stringify(values),
     });
 
-    console.log("response", response);
+    if (response.ok) {
+      nav("/", {
+        replaceState: true,
+        forceReload: true,
+      });
+    } else {
+      switch (response.status) {
+        case 422:
+          const json = await response.json();
+          const errors = json.errors;
 
-    // if (response.ok) {
-    //   nav("/", {
-    //     replaceState: true,
-    //     forceReload: true,
-    //   });
-    // } else {
-    //   switch (response.status) {
-    //     case 422:
-    //       const json = await response.json();
-    //       const errors = json.errors;
-    //
-    //       Object.keys(errors).forEach((key) => {
-    //         setError(loginForm, key as "email" | "password", errors[key]);
-    //       });
-    //       break;
-    //     default:
-    //       // noinspection ExceptionCaughtLocallyJS
-    //       throw new Error(
-    //         "Sorry, there was an error when logging in. Refresh the page and try again.",
-    //       );
-    //   }
-    // }
+          Object.keys(errors).forEach((key) => {
+            setError(loginForm, key as "email" | "password", errors[key]);
+          });
+          break;
+        default:
+          // noinspection ExceptionCaughtLocallyJS
+          throw new Error(
+            "Sorry, there was an error when logging in. Refresh the page and try again.",
+          );
+      }
+    }
   });
+
   return (
     <div class="flex min-h-screen items-center justify-center">
       <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
