@@ -51,6 +51,16 @@ export default defineConfig(({ command, mode }): UserConfig => {
         // Don't cache the server response in dev mode
         "Cache-Control": "public, max-age=0",
       },
+      proxy: {
+        '/api': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+          headers: {
+            Accept: 'application/json',
+            "Content-type": 'application/json',
+          }
+        }
+      }
     },
     preview: {
       headers: {

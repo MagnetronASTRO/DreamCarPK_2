@@ -2,25 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-gray-100;
+  }
+
+  header {
+    @apply shadow-sm;
+  }
+}
+
 @layer components {
   :root {
     --border_radius_car: 10px;
   }
 
   .car-wrapper {
-    @apply bg-transparent border-none text-center rounded-none cursor-pointer;
+    @apply cursor-pointer rounded-none border-none bg-transparent text-center;
   }
 
   .car-card-container {
-    @apply p-0 w-full;
+    @apply w-full p-0;
   }
 
   .car-card {
-    @apply h-[350px] flex flex-col justify-between items-center bg-white rounded-lg shadow-lg overflow-hidden relative z-20;
+    @apply relative z-20 flex h-[350px] flex-col items-center justify-between overflow-hidden rounded-lg bg-white shadow-lg;
   }
 
   .img-container {
-    @apply w-full h-3/4 relative;
+    @apply relative h-3/4 w-full;
   }
 
   /* Gradient overlay styles */
@@ -36,11 +46,11 @@
   }
 
   .car-description {
-    @apply h-2/4 flex flex-col justify-center;
+    @apply flex h-2/4 flex-col justify-center;
   }
 
   .car-availability {
-    @apply mt-0 mb-2 text-lg;
+    @apply mb-2 mt-0 text-lg;
   }
 
   .text-limegreen {
