@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000/api",
+            "url": "http://localhost/api",
             "description": "API Server"
         }
     ],
@@ -178,10 +178,828 @@
                     }
                 ]
             }
+        },
+        "/api/cars": {
+            "get": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Get a list of all cars",
+                "operationId": "1fd4f1fdc0da258c5084bcdce4bbe693",
+                "responses": {
+                    "200": {
+                        "description": "List of all cars",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Car"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Create a new car",
+                "operationId": "6f519ab2c9767d4d3b1be7cf8f1287ed",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "make",
+                                    "model",
+                                    "year"
+                                ],
+                                "properties": {
+                                    "make": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "model": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "year": {
+                                        "type": "integer",
+                                        "example": 2023
+                                    },
+                                    "is_available": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Car created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cars/{id}": {
+            "get": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Get details of a specific car",
+                "operationId": "b222bfa902eefbb6a4a875762081dcbc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Car ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Car details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Car not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Update an existing car",
+                "operationId": "1d232cedb5f39024dccd947cddd10087",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Car ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "make": {
+                                        "type": "string",
+                                        "example": "Honda"
+                                    },
+                                    "model": {
+                                        "type": "string",
+                                        "example": "Civic"
+                                    },
+                                    "year": {
+                                        "type": "integer",
+                                        "example": 2022
+                                    },
+                                    "is_available": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Car not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Delete a car",
+                "operationId": "802b64f09e484fbb1bb3817362d30cc9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Car ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Car deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Car not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Get a list of all reservations",
+                "operationId": "fbc6050d9f7fdb07075d3aaeb157ffa9",
+                "responses": {
+                    "200": {
+                        "description": "List of all reservations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Reservation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Create a new reservation",
+                "operationId": "01e3d21dc330a31de025203bc142ffa3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "car_id",
+                                    "reservation_date",
+                                    "return_date"
+                                ],
+                                "properties": {
+                                    "car_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "reservation_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-02-01T12:00:00Z"
+                                    },
+                                    "return_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-02-10T12:00:00Z"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Reservation created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Reservation"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Get details of a specific reservation",
+                "operationId": "a226b43b2a6a846245e658d01bf00720",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reservation ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reservation details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Reservation"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Update an existing reservation",
+                "operationId": "02fa683a9f80a0563596fb06685bcbc7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reservation ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "car_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "reservation_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-02-05T14:00:00Z"
+                                    },
+                                    "return_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-02-15T10:00:00Z"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reservation updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Reservation"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Delete a reservation",
+                "operationId": "9b6641e4ded1ff7adfce352d589b85e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reservation ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reservation deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a list of all users (Admin only)",
+                "operationId": "c457726701591d1183b53aa71fc13441",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get details of a specific user (Admin or user himself)",
+                "operationId": "36a33ff774d5cba33c039dec2c3e0287",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update an existing user (Admin or user himself)",
+                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a user (Admin only)",
+                "operationId": "fa56cffde745d3f152f95cbacd936c0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "Car": {
+                "title": "Car",
+                "description": "A car available for reservation",
+                "properties": {
+                    "id": {
+                        "description": "Car ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "make": {
+                        "description": "Car brand",
+                        "type": "string",
+                        "example": "Toyota"
+                    },
+                    "model": {
+                        "description": "Car model",
+                        "type": "string",
+                        "example": "Corolla"
+                    },
+                    "year": {
+                        "description": "Manufacturing year",
+                        "type": "integer",
+                        "example": 2023
+                    },
+                    "is_available": {
+                        "description": "Availability status",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "pricing": {
+                        "$ref": "#/components/schemas/CarPricing"
+                    },
+                    "specs": {
+                        "$ref": "#/components/schemas/CarSpec"
+                    },
+                    "photos": {
+                        "description": "List of car photos",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CarPhoto"
+                        }
+                    },
+                    "reservations": {
+                        "description": "List of reservations for this car",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Reservation"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CarPhoto": {
+                "title": "Car Photo",
+                "description": "Photo associated with a car",
+                "properties": {
+                    "id": {
+                        "description": "Photo ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_id": {
+                        "description": "Car ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "photo_name": {
+                        "description": "Car photo filename",
+                        "type": "string",
+                        "example": "toyota-corolla.jpg"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "CarPricing": {
+                "title": "Car Pricing",
+                "description": "Pricing details of a car",
+                "properties": {
+                    "id": {
+                        "description": "Pricing ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_id": {
+                        "description": "Car ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "hour_price": {
+                        "description": "Hourly rental price",
+                        "type": "number",
+                        "format": "float",
+                        "example": 15.99
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "CarSpec": {
+                "title": "Car Specifications",
+                "description": "Technical specifications of a car",
+                "properties": {
+                    "id": {
+                        "description": "Car Specification ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_id": {
+                        "description": "Car ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "power": {
+                        "description": "Car engine power in HP",
+                        "type": "integer",
+                        "example": 150
+                    },
+                    "color": {
+                        "description": "Car color",
+                        "type": "string",
+                        "example": "Red"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "Reservation": {
+                "title": "Reservation",
+                "description": "A car reservation",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "car_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "reservation_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-02-01T12:00:00Z"
+                    },
+                    "return_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-02-10T12:00:00Z"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-01-02T12:00:00Z"
+                    },
+                    "car": {
+                        "$ref": "#/components/schemas/Car"
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "title": "User Model",
                 "description": "User details",
@@ -220,6 +1038,13 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2023-01-02T12:00:00Z"
+                    },
+                    "reservations": {
+                        "description": "List of user reservations",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Reservation"
+                        }
                     }
                 },
                 "type": "object"
@@ -230,6 +1055,18 @@
         {
             "name": "Authentication",
             "description": "API Endpoints for User Authentication"
+        },
+        {
+            "name": "Cars",
+            "description": "API Endpoints for managing cars"
+        },
+        {
+            "name": "Reservations",
+            "description": "API Endpoints for managing reservations"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints for managing users"
         }
     ]
 }

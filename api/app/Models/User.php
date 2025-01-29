@@ -23,6 +23,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(property="email_verified_at", type="string", format="date-time", nullable=true, example="2023-01-01T12:00:00Z", description="Timestamp when the email was verified"),
  *     @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T12:00:00Z", description="User creation timestamp"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-02T12:00:00Z", description="User last update timestamp"),
+ *     @OA\Property(property="reservations", type="array", @OA\Items(ref="#/components/schemas/Reservation"), description="List of user reservations")
  * )
  */
 class User extends Authenticatable
@@ -65,11 +66,6 @@ class User extends Authenticatable
             'role' => RoleEnum::class,
             'password' => 'hashed',
         ];
-    }
-
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
     }
 
     public function reservations(): HasMany

@@ -2,49 +2,162 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreReservationRequest;
-use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
+use OpenApi\Annotations as OA;
 
-class ReservationController extends Controller
+/**
+ * @OA\Tag(name="Reservations", description="API Endpoints for managing reservations")
+ */
+class ReservationController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware('auth:sanctum')
+        ];
+    }
+
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/reservations",
+     *     summary="Get a list of all reservations",
+     *     tags={"Reservations"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of all reservations",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Reservation"))
+     *     )
+     * )
      */
     public function index()
     {
-        //
+        return Reservation::all();
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/reservations",
+     *     summary="Create a new reservation",
+     *     tags={"Reservations"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"car_id", "reservation_date", "return_date"},
+     *             @OA\Property(property="car_id", type="integer", example=1),
+     *             @OA\Property(property="reservation_date", type="string", format="date-time", example="2025-02-01T12:00:00Z"),
+     *             @OA\Property(property="return_date", type="string", format="date-time", example="2025-02-10T12:00:00Z")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Reservation created successfully", @OA\JsonContent(ref="#/components/schemas/Reservation")),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
-    public function store(StoreReservationRequest $request)
+    public function store(Request $request)
     {
-        //
+        $fields = $request->validate([
+            'car_id' => 'required|exists:cars,id',
+            'reservation_date' => 'required|date',
+            'return_date' => 'required|date|after:reservation_date',
+        ]);
+
+        $reservation = $request->user()->reservations()->create($fields);
+
+        return response()->json($reservation, 201);
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/reservations/{id}",
+     *     summary="Get details of a specific reservation",
+     *     tags={"Reservations"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Reservation ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Reservation details", @OA\JsonContent(ref="#/components/schemas/Reservation")),
+     *     @OA\Response(response=404, description="Reservation not found")
+     * )
      */
     public function show(Reservation $reservation)
     {
-        //
+        return $reservation;
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/reservations/{id}",
+     *     summary="Update an existing reservation",
+     *     tags={"Reservations"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Reservation ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="car_id", type="integer", example=2),
+     *             @OA\Property(property="reservation_date", type="string", format="date-time", example="2025-02-05T14:00:00Z"),
+     *             @OA\Property(property="return_date", type="string", format="date-time", example="2025-02-15T10:00:00Z")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Reservation updated successfully", @OA\JsonContent(ref="#/components/schemas/Reservation")),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=404, description="Reservation not found")
+     * )
      */
-    public function update(UpdateReservationRequest $request, Reservation $reservation)
+    public function update(Request $request, Reservation $reservation)
     {
-        //
+        Gate::authorize('modify', $reservation);
+
+        $fields = $request->validate([
+            'car_id' => 'exists:cars,id',
+            'reservation_date' => 'date',
+            'return_date' => 'date|after:reservation_date',
+        ]);
+
+        $reservation->update($fields);
+
+        return $reservation;
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/reservations/{id}",
+     *     summary="Delete a reservation",
+     *     tags={"Reservations"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Reservation ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Reservation deleted successfully"),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=404, description="Reservation not found")
+     * )
      */
     public function destroy(Reservation $reservation)
     {
-        //
+        Gate::authorize('modify', $reservation);
+
+        $reservation->delete();
+
+        return response()->json(['message' => 'The reservation was deleted'], 200);
     }
 }

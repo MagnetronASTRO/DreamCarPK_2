@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum RoleEnum: string
+enum RoleEnum: int
 {
-    case USER = 'user';
-    case ADMIN = 'admin';
+    case USER = 1;
+    case ADMIN = 7;
 
     public function isAdmin(): bool
     {

@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make(env('ADMIN_PASSWORD')),
-            'role' => RoleEnum::ADMIN,
+            'role' => RoleEnum::ADMIN->value,
         ]);
 
         Reservation::factory()->forUser($testUser)->create([
