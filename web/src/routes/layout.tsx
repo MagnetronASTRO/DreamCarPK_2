@@ -29,10 +29,6 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  useVisibleTask$(() => {
-    window.HSStaticMethods.autoInit();
-  });
-
   return (
     <>
       <Header />

@@ -1,7 +1,7 @@
 import { $, component$, type QRL } from "@builder.io/qwik";
 import { Link, routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler } from "@modular-forms/qwik";
-import { useForm, valiForm$ } from "@modular-forms/qwik";
+import { setError, useForm, valiForm$ } from "@modular-forms/qwik";
 import * as v from "valibot";
 
 const endpoint = import.meta.env.PUBLIC_API_ENDPOINT;
