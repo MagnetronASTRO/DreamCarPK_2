@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
             $table->string('reservation_date');
             $table->string('return_date');
+            $table->boolean('is_returned');
             $table->timestamps();
         });
     }

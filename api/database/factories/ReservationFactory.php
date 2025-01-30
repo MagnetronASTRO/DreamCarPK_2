@@ -19,13 +19,14 @@ class ReservationFactory extends Factory
     public function definition(): array
     {
         $reservationDate = fake()->dateTimeBetween('-1 month', '+1 month');
-        $returnDate = fake()->dateTimeBetween($reservationDate, '+10 days');
+        $returnDate = fake()->dateTimeBetween('+10 days', '+2 month');
 
         return [
             'user_id' => User::factory(), // Default factory-generated user
             'car_id' => Car::factory(),  // Default factory-generated car
             'reservation_date' => $reservationDate,
             'return_date' => $returnDate,
+            'is_returned' => fake()->boolean(10),
             'created_at' => now(),
         ];
     }
@@ -35,7 +36,8 @@ class ReservationFactory extends Factory
      */
     public function forUser(User $user): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'user_id' => $user->id,
         ]);
-    }}
+    }
+}

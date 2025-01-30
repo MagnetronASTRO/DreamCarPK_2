@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use OpenApi\Annotations as OA;
 
 /**
@@ -33,12 +32,15 @@ class Reservation extends Model
     /** @use HasFactory<\Database\Factories\ReservationFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'car_id', 'reservation_date', 'return_date'];
+    protected $fillable = ['user_id', 'reservation_date', 'return_date'];
 
-    protected $hidden = ['id', 'car_id', 'created_at', 'updated_at'];
+    protected $hidden = ['car_id', 'created_at', 'updated_at'];
 
-    public function car(): HasOne
+    /**
+     * Each reservation belongs to one car.
+     */
+    public function car(): BelongsTo
     {
-        return $this->hasOne(Car::class);
+        return $this->belongsTo(Car::class);
     }
 }

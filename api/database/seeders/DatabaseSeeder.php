@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             'role' => RoleEnum::ADMIN->value,
         ]);
 
-        Reservation::factory()->forUser($testUser)->create([
+        Reservation::factory(4)->forUser($testUser)->create([
             'car_id' => Car::first()->id,
         ]);
     }

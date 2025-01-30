@@ -1,10 +1,10 @@
-// @ts-nocheck
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { $, component$, type QRL } from "@builder.io/qwik";
 import { Link, routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler } from "@modular-forms/qwik";
-import { formAction$, useForm, valiForm$ } from "@modular-forms/qwik";
+import { useForm, valiForm$ } from "@modular-forms/qwik";
 import * as v from "valibot";
+
+const endpoint = import.meta.env.PUBLIC_API_ENDPOINT;
 
 const RegisterSchema = v.pipe(
   v.object({
@@ -42,42 +42,53 @@ export const useFormLoader = routeLoader$<InitialValues<RegisterForm>>(() => ({
   password_confirmation: "",
 }));
 
-export const useFormAction = formAction$<RegisterForm>((values) => {
-  // Runs on server
-}, valiForm$(RegisterSchema));
-
 export default component$(() => {
   const [registerForm, { Form, Field }] = useForm<RegisterForm>({
     loader: useFormLoader(),
-    action: useFormAction(),
     validate: valiForm$(RegisterSchema),
   });
 
   const nav = useNavigate();
 
-  const handleSubmit: QRL<SubmitHandler<RegisterForm>> = $(
-    async (values, event) => {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
+  const handleSubmit: QRL<SubmitHandler<RegisterForm>> = $(async (values) => {
+    const response = await fetch(`${endpoint}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(values),
+    });
 
-      console.log(response);
-
-      // Check if the response is successful
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert("Registration failed:", errorData);
-        console.error("Registration failed:", errorData);
-        return;
-      }
-
-      // Parse and log the response
+    if (response.ok) {
       const data = await response.json();
-      alert("Registration successful:", data);
-      console.log("Registration successful:", data);
-    },
-  );
+
+      document.cookie = `auth_token=${data.token}; Path=/; SameSite=Lax;`;
+
+      nav("/", { replaceState: true, forceReload: true });
+    } else {
+      // 4. Handle non-2xx responses
+      switch (response.status) {
+        case 422: {
+          const json = await response.json();
+          const errors = json.errors;
+          // Populate form errors
+          Object.keys(errors).forEach((key) => {
+            setError(
+              registerForm,
+              key as "name" | "email" | "password" | "password_confirmation",
+              errors[key],
+            );
+          });
+          break;
+        }
+        default:
+          throw new Error(
+            "Sorry, there was an error during Registration. Refresh the page and try again.",
+          );
+      }
+    }
+  });
 
   return (
     <div class="flex min-h-screen items-center justify-center">
@@ -183,7 +194,9 @@ export default component$(() => {
             class="w-full rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
             disabled={registerForm.submitting}
           >
-            Register
+            {!registerForm.submitting && <span>Register</span>}
+
+            {registerForm.submitting && <span>Registration ... </span>}
           </button>
         </Form>
         <span>Already have an account? </span>

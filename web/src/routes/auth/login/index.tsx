@@ -1,9 +1,7 @@
-// @ts-nocheck
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { $, component$, type QRL } from "@builder.io/qwik";
 import { Link, routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler } from "@modular-forms/qwik";
-import { formAction$, useForm, valiForm$, setError } from "@modular-forms/qwik";
+import { useForm, valiForm$, setError } from "@modular-forms/qwik";
 import * as v from "valibot";
 
 const endpoint = import.meta.env.PUBLIC_API_ENDPOINT;
@@ -31,7 +29,6 @@ export const useFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
 export default component$(() => {
   const [loginForm, { Form, Field }] = useForm<LoginForm>({
     loader: useFormLoader(),
-    // action: useFormAction(),
     validate: valiForm$(LoginSchema),
   });
 

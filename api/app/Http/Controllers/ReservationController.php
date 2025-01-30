@@ -24,18 +24,45 @@ class ReservationController extends Controller implements HasMiddleware
     /**
      * @OA\Get(
      *     path="/api/reservations",
-     *     summary="Get a list of all reservations",
+     *     summary="Get all reservations for the authenticated user",
      *     tags={"Reservations"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="include",
+     *         in="query",
+     *         description="Relations to include (e.g. ?include=car)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="List of all reservations",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Reservation"))
-     *     )
+     *         description="List of user reservations",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Reservation")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Reservation::all();
+        // The authenticated user is automatically set by the 'auth:sanctum' middleware
+        $user = $request->user();
+
+        // Base query to fetch reservations for the authenticated user
+        $query = Reservation::where('user_id', $user->id);
+
+        // Check if 'include' query param is provided (e.g. ?include=car)
+        if ($request->has('include')) {
+            $includes = explode(',', $request->query('include'));
+            $validRelations = ['car'];
+            $relations = array_intersect($includes, $validRelations);
+            $query->with($relations);
+        }
+
+        // Fetch and return reservations with optional relations
+        return response()->json($query->get());
     }
 
     /**
@@ -88,9 +115,17 @@ class ReservationController extends Controller implements HasMiddleware
      *     @OA\Response(response=404, description="Reservation not found")
      * )
      */
-    public function show(Reservation $reservation)
+    public function show(Request $request, Reservation $reservation)
     {
-        return $reservation;
+        $relations = [];
+
+        if ($request->has('include')) {
+            $includes = explode(',', $request->query('include'));
+            $validRelations = ['car'];
+            $relations = array_intersect($includes, $validRelations);
+        }
+
+        return response()->JSON($reservation->load($relations));
     }
 
     /**

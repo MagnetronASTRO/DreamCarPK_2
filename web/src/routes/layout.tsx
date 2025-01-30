@@ -1,4 +1,4 @@
-import { component$, Slot } from "@builder.io/qwik";
+import { component$, Slot, useVisibleTask$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
 import type { IStaticMethods } from "preline/preline";
 import { Header } from "~/components/header";
@@ -29,6 +29,10 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  useVisibleTask$(() => {
+    window.HSStaticMethods.autoInit();
+  });
+
   return (
     <>
       <Header />
@@ -39,8 +43,3 @@ export default component$(() => {
     </>
   );
 });
-
-// TODO
-//useVisibleTask$(() => {
-//  window.HSStaticMethods.autoInit();
-//});

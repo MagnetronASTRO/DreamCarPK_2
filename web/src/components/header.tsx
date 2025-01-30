@@ -1,10 +1,15 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, $, useVisibleTask$ } from "@builder.io/qwik";
+import { useNavigate } from "@builder.io/qwik-city";
 import { useUser } from "~/routes/layout";
 
 export const Header = component$(() => {
   const user = useUser();
+  const nav = useNavigate();
 
-  console.log(user);
+  const logout = $(() => {
+    document.cookie = "auth_token=; Max-Age=-99999999;";
+    nav("/", { replaceState: true, forceReload: true });
+  });
 
   return (
     <header class="relative z-50 flex w-full flex-wrap bg-white py-3 text-lg dark:bg-neutral-800 sm:flex-nowrap sm:justify-start">
@@ -156,6 +161,29 @@ export const Header = component$(() => {
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                       </svg>
                       Account settings
+                    </a>
+                    <a
+                      class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-lg text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                      href="#"
+                      onClick$={logout}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-log-out"
+                      >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" x2="9" y1="12" y2="12" />
+                      </svg>{" "}
+                      Logout
                     </a>
                   </div>
                 </div>
