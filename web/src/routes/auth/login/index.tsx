@@ -37,30 +37,7 @@ export default component$(() => {
 
   const nav = useNavigate();
 
-  const getBrowserCookieValue = $(function getBrowserCookieValue(
-    cname: string,
-  ) {
-    const name = cname + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const ca = decodedCookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == " ") {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-
-    return "";
-  });
-
   const handleSubmit: QRL<SubmitHandler<LoginForm>> = $(async (values) => {
-    // await fetch(`${endpoint}/sanctum/csrf-cookie`, { credentials: "include" });
-    //
-    // const token = await getBrowserCookieValue("XSRF-TOKEN");
-
     const response = await fetch(`${endpoint}/login`, {
       method: "POST",
       headers: {
@@ -71,22 +48,30 @@ export default component$(() => {
     });
 
     if (response.ok) {
-      nav("/", {
-        replaceState: true,
-        forceReload: true,
-      });
+      const data = await response.json();
+
+      document.cookie = `auth_token=${data.token}; Path=/; SameSite=Lax;`;
+
+      nav("/", { replaceState: true, forceReload: true });
     } else {
+      // 4. Handle non-2xx responses
       switch (response.status) {
-        case 422:
+        case 401: {
+          const json = await response.json();
+          const message = json.message;
+          setError(loginForm, key as "password", message);
+          break;
+        }
+        case 422: {
           const json = await response.json();
           const errors = json.errors;
-
+          // Populate form errors
           Object.keys(errors).forEach((key) => {
             setError(loginForm, key as "email" | "password", errors[key]);
           });
           break;
+        }
         default:
-          // noinspection ExceptionCaughtLocallyJS
           throw new Error(
             "Sorry, there was an error when logging in. Refresh the page and try again.",
           );

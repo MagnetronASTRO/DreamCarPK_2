@@ -1,9 +1,10 @@
 import { component$, Slot } from "@builder.io/qwik";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
 import type { IStaticMethods } from "preline/preline";
 import { Header } from "~/components/header";
 import { Main } from "~/components/main";
 import { Footer } from "~/components/footer";
+import type { User } from "~/routes/plugin@auth";
 
 // TODO: move to routes that will use preline components
 declare global {
@@ -11,6 +12,10 @@ declare global {
     HSStaticMethods: IStaticMethods;
   }
 }
+
+export const useUser = routeLoader$(({ sharedMap }) => {
+  return sharedMap.get("user") as User;
+});
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:

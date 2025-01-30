@@ -1,6 +1,11 @@
 import { component$ } from "@builder.io/qwik";
+import { useUser } from "~/routes/layout";
 
 export const Header = component$(() => {
+  const user = useUser();
+
+  console.log(user);
+
   return (
     <header class="relative z-50 flex w-full flex-wrap bg-white py-3 text-lg dark:bg-neutral-800 sm:flex-nowrap sm:justify-start">
       <nav class="mx-auto w-full px-6 sm:flex sm:items-center sm:justify-between sm:px-8">
@@ -68,153 +73,94 @@ export const Header = component$(() => {
               href="/"
               aria-current="page"
             >
-              Home
+              Cars
             </a>
-            <a
-              class="font-medium text-gray-600 hover:text-gray-400 focus:text-gray-400 focus:outline-none dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
-              href="/reservations"
-            >
-              Reservations
-            </a>
-            <a
-              class="font-medium text-gray-600 hover:text-gray-400 focus:text-gray-400 focus:outline-none dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
-              href="/auth/login"
-            >
-              Login
-            </a>
-
-            <div class="hs-dropdown relative inline-flex">
-              <button
-                id="hs-dropdown-with-header"
-                type="button"
-                class="hs-dropdown-toggle inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-lg font-medium text-gray-800 shadow-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                aria-haspopup="menu"
-                aria-expanded="false"
-                aria-label="Dropdown"
+            {user.value && (
+              <a
+                class="font-medium text-gray-600 hover:text-gray-400 focus:text-gray-400 focus:outline-none dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
+                href="/reservations"
               >
-                Settings
-                <svg
-                  class="size-4 hs-dropdown-open:rotate-180"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                Reservations
+              </a>
+            )}
+            {!user.value && (
+              <a
+                class="font-medium text-gray-600 hover:text-gray-400 focus:text-gray-400 focus:outline-none dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
+                href="/auth/login"
+              >
+                Login
+              </a>
+            )}
+
+            {user.value && (
+              <div class="hs-dropdown relative inline-flex">
+                <button
+                  id="hs-dropdown-with-header"
+                  type="button"
+                  class="hs-dropdown-toggle inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-lg font-medium text-gray-800 shadow-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                  aria-label="Dropdown"
                 >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
-              </button>
+                  Settings
+                  <svg
+                    class="size-4 hs-dropdown-open:rotate-180"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
 
-              <div
-                class="hs-dropdown-menu duration mt-2 hidden min-w-60 rounded-lg bg-white opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100 dark:border dark:border-neutral-700 dark:bg-neutral-800"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="hs-dropdown-with-header"
-              >
-                <div class="border-b border-gray-200 px-4 py-3 dark:border-neutral-700">
-                  <p class="text-lg text-gray-500 dark:text-neutral-400">
-                    Signed in as
-                  </p>
-                  <p class="text-lg font-medium text-gray-800 dark:text-neutral-300">
-                    james@site.com
-                  </p>
-                </div>
-                <div class="space-y-0.5 p-1">
-                  <a
-                    class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-lg text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      class="size-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                <div
+                  class="hs-dropdown-menu duration mt-2 hidden min-w-60 rounded-lg bg-white opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100 dark:border dark:border-neutral-700 dark:bg-neutral-800"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="hs-dropdown-with-header"
+                >
+                  <div class="border-b border-gray-200 px-4 py-3 dark:border-neutral-700">
+                    <p class="text-lg text-gray-500 dark:text-neutral-400">
+                      Signed in as
+                    </p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-neutral-300">
+                      {user.value.email}
+                    </p>
+                  </div>
+                  <div class="space-y-0.5 p-1">
+                    <a
+                      class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-lg text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                      href="#"
                     >
-                      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                    </svg>
-                    Newsletter
-                  </a>
-                  <a
-                    class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-lg text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      class="size-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <circle cx="8" cy="21" r="1" />
-                      <circle cx="19" cy="21" r="1" />
-                      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-                    </svg>
-                    Purchases
-                  </a>
-                  <a
-                    class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-lg text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      class="size-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
-                      <path d="M12 12v9" />
-                      <path d="m8 17 4 4 4-4" />
-                    </svg>
-                    Downloads
-                  </a>
-                  <a
-                    class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-lg text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      class="size-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    Team Account
-                  </a>
+                      <svg
+                        class="size-4 shrink-0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                      Account settings
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </nav>
